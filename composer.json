@@ -1,0 +1,46 @@
+{
+  "name": "suicore/walrus-sdk-php",
+  "description": "A PHP wrapper of Walrus",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dimitris Frangiadakis",
+      "email": "dimitris@suicore.com"
+    }
+  ],
+  "keywords": [
+    "walrus",
+    "sui",
+    "sdk",
+    "php",
+    "blockchain"
+  ],
+  "homepage": "https://github.com/suicore/walrus-sdk-php",
+  "require": {
+    "php": ">=8.1",
+    "guzzlehttp/guzzle": "^7.9",
+    "ext-openssl": "*"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.6",
+    "phpunit/phpunit": "^11"
+  },
+  "autoload": {
+    "psr-4": {
+      "Suicore\\Walrus\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Suicore\\Walrus\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "XDEBUG_MODE=coverage php ./vendor/bin/phpunit --colors=always --coverage-html tests/code_coverage_report",
+    "test-e2e": "XDEBUG_MODE=coverage RUN_INTEGRATION_TESTS=1 php ./vendor/bin/phpunit --colors=always --coverage-html tests/code_coverage_report",
+    "cs": "phpcs --standard=PSR12 src/"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
