@@ -6,8 +6,7 @@ The Walrus PHP SDK provides a convenient, strongly-typed interface for interacti
 
 - **Store Blobs**: Upload data (or files) as blobs with configurable storage epochs, send-to address, and deletability options.
 - **Retrieve Blobs**: Easily retrieve blob content using a unique blob ID.
-- **Strongly Typed Responses**: Work with dedicated response classes such as `StoreBlobResponse`, `NewlyCreatedResponse`, and `AlreadyCertifiedResponse`—eliminating the need for `stdClass`.
-- **Configurable Timeout**: Customize request timeouts (default is 20 seconds).
+- **Strongly Typed Responses**: Work with dedicated response classes such as `StoreBlobResponse`, `NewlyCreatedResponse`, and `AlreadyCertifiedResponse`.
 
 ## Installation
 
