@@ -1,6 +1,6 @@
 # Walrus PHP SDK
 
-The Walrus PHP SDK provides a convenient, strongly-typed interface for interacting with the Walrus HTTP APIs. It supports storing and retrieving blobs via the publisher and aggregator endpoints of the Walrus service, leveraging Guzzle HTTP for robust HTTP communication.
+The Walrus PHP SDK provides a convenient, strongly-typed interface for interacting with the Walrus HTTP APIs. It supports storing and retrieving blobs and quilts via the publisher and aggregator endpoints of the Walrus service, leveraging Guzzle HTTP for robust HTTP communication.
 
 ## Features
 
