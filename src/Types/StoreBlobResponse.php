@@ -1,6 +1,6 @@
 <?php
 
-namespace Suicore\Walrus\Responses;
+namespace Suicore\Walrus\Types;
 
 class StoreBlobResponse
 {
@@ -19,6 +19,22 @@ class StoreBlobResponse
         $data = json_decode($json, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new \InvalidArgumentException("Invalid JSON: " . json_last_error_msg());
+        }
+
+        $newlyCreated = isset($data['newlyCreated'])
+            ? NewlyCreatedResponse::fromArray($data['newlyCreated'])
+            : null;
+        $alreadyCertified = isset($data['alreadyCertified'])
+            ? AlreadyCertifiedResponse::fromArray($data['alreadyCertified'])
+            : null;
+
+        return new self($newlyCreated, $alreadyCertified);
+    }
+
+    public static function fromArray(array $data): self
+    {
+        if (!isset($data['newlyCreated']) && !isset($data['alreadyCertified'])) {
+            throw new \InvalidArgumentException("Invalid data for StoreBlobResponse");
         }
 
         $newlyCreated = isset($data['newlyCreated'])

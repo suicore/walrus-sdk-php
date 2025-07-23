@@ -1,8 +1,8 @@
 <?php
 
-namespace Suicore\Walrus\Responses;
+namespace Suicore\Walrus\Types;
 
-class StoreBlobOptions
+class StoreBlobOrQuiltOptions
 {
     private int $epochs;
     private string $sendObjectTo;

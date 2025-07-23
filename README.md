@@ -25,7 +25,7 @@ Here’s a basic example of how to use the SDK:
 
 require 'vendor/autoload.php';
 
-use Suicore\Walrus\Responses\StoreBlobOptions;
+use Suicore\Walrus\Types\StoreBlobOrQuiltOptions;
 use Suicore\Walrus\WalrusClient;
 
 
@@ -37,7 +37,7 @@ $aggregatorUrl = 'https://aggregator.walrus-testnet.walrus.space';
 $client = new WalrusClient($publisherUrl, $aggregatorUrl);
 
 // Prepare options for storing a blob
-$options = new StoreBlobOptions(epochs: 2);
+$options = new StoreBlobOrQuiltOptions(epochs: 2);
 
 // Store a text blob
 $storeResponse = $client->storeBlob("Hello, Walrus!", $options);
@@ -58,13 +58,52 @@ echo "Retrieved content: {$content}\n";
 ```
 
 ### Uploading Files
-To upload a file, simply pass the file path to the `storeBlob` method and set the $isFile parameter to `true`:
+To upload a blob, simply pass the file path to the `storeBlob` method and set the $isFile parameter to `true`:
 
 ```php
 // Save a file as a blob
 $file = '/path/to/file.txt';
-$options = new StoreBlobOptions(epochs: 2);
+$options = new StoreBlobOrQuiltOptions(epochs: 2);
 $storeResponse = $client->storeBlob(dataOrPath: $file, options: $options, isFile: true);
+```
+
+### Uploading a file in a quilt
+The SDK supports uploading multiple files as a single quilt using the `storeQuilt` method. Each file can be associated with custom metadata.
+
+```php
+use Suicore\Walrus\WalrusClient;
+use Suicore\Walrus\Types\StoreBlobOrQuiltOptions;
+use Suicore\Walrus\Types\QuiltElementFile;
+use Suicore\Walrus\Types\QuiltElementFileMetadata;
+
+$client = new WalrusClient($publisherUrl, $aggregatorUrl);
+$options = new StoreBlobOrQuiltOptions(epochs: 2);
+
+$files = [
+    new QuiltElementFile('wal1.jpg', __DIR__ . '/walrus.jpg'),
+    new QuiltElementFile('wal2.jpg', fopen(__DIR__ . '/walrus.jpg', 'rb')), // Open resource
+];
+
+$metadata = [
+    new QuiltElementFileMetadata('wal1.jpg', (object)['creator' => 'walrus', 'version' => '1.0']),
+    new QuiltElementFileMetadata('wal2.jpg', (object)['type' => 'logo', 'format' => 'png']),
+];
+
+$storeResponse = $client->storeQuilt($files, $options, $metadata);
+
+$files = $storeResponse->getStoredQuiltBlobs()->getQuiltFiles();
+foreach ($files as $file) {
+    echo "Stored patch ID: " . $file->getQuiltPatchId() . "\n";
+}
+```
+
+### Retrieving a Quilt Patch or Quilt by name
+```php
+$patchId = 'quilt-file-patch-id';
+$content = $client->getQuilt($patchId);
+
+$blobId = 'quilt-blob-id';
+$fileContent = $client->getQuilt($blobId, 'wal1.jpg');
 ```
 
 ### Encryption
@@ -89,17 +128,36 @@ A key length of 32 bytes is required for AES-256 encryption. Shorter or longer k
 
 #### storeBlob
 Stores a blob using the publisher API.
+
 Parameters:
 - `string dataOrPath`: The blob data or file path.
-- `StoreBlobOptions $options`: Options such as epochs, sendObjectTo address, and deletability.
+- `StoreBlobOrQuiltOptions $options`: Options such as epochs, sendObjectTo address, and deletability.
 - `bool $isFile`: Set to true if $dataOrPath is a file path.
 - Returns: A StoreBlobResponse object representing the response from the API.
 
 #### getBlob
 Retrieves a blob from the aggregator API.
+
 Parameters:
 - `string $blobId`: The unique blob identifier.
 - Returns: The blob content as a string.
+
+#### storeQuilt
+Stores multiple files as a quilt with optional metadata.
+
+Parameters:
+- `QuiltFile[] $files`: An array of QuiltFile objects containing identifier and file source.
+- `StoreBlobOrQuiltOptions $options`: Storage options.
+- `QuiltMetadata[] $metadata`: (Optional) Metadata associated with each file.
+- Returns: StoreQuiltResponse
+
+#### getQuilt
+Retrieves quilt content from the aggregator.
+
+Parameters:
+- `string $blobOrPatchId`: A blob ID (for full quilt) or a patch ID (for specific patch).
+- `string|null $filename`: Optional filename to extract a specific file from the quilt.
+- Returns: File contents as a string.
 
 ### Testing
 To run the test suite, use the following commands:

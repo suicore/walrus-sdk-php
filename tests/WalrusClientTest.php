@@ -7,7 +7,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
-use Suicore\Walrus\Responses\StoreBlobOptions;
+use Suicore\Walrus\Types\StoreBlobOrQuiltOptions;
 use Suicore\Walrus\WalrusClient;
 
 final class WalrusClientTest extends TestCase
@@ -69,8 +69,8 @@ final class WalrusClientTest extends TestCase
             aggregatorClient: $aggregatorClient
         );
 
-        $storeBlobOptions = new StoreBlobOptions(2, '', false);
-        $result = $client->storeBlob("some string", $storeBlobOptions);
+        $StoreBlobOrQuiltOptions = new StoreBlobOrQuiltOptions(2, '', false);
+        $result = $client->storeBlob("some string", $StoreBlobOrQuiltOptions);
 
         // Use the strongly-typed methods to check the response.
         $this->assertTrue($result->isNewlyCreated(), 'Expected response to be newly created.');
