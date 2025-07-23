@@ -3,10 +3,10 @@
 namespace Suicore\Walrus\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Suicore\Walrus\Responses\StoreBlobOptions;
+use Suicore\Walrus\Types\StoreBlobOrQuiltOptions;
 use Suicore\Walrus\WalrusClient;
 
-final class WalrusClientE2ETest extends TestCase
+final class WalrusClientBlobsE2ETest extends TestCase
 {
     private string $publisherUrl = 'https://publisher.walrus-testnet.walrus.space';
     private string $aggregatorUrl = 'https://aggregator.walrus-testnet.walrus.space';
@@ -22,7 +22,7 @@ final class WalrusClientE2ETest extends TestCase
     {
         $client = new WalrusClient($this->publisherUrl, $this->aggregatorUrl);
         $data = "end-to-end test blob " . uniqid();
-        $options = new StoreBlobOptions(2, '', false);
+        $options = new StoreBlobOrQuiltOptions(2, '', false);
         $storeResponse = $client->storeBlob($data, $options, false);
 
         // Check that we got a newly created response.
@@ -46,7 +46,7 @@ final class WalrusClientE2ETest extends TestCase
         if (!file_exists($filePath)) {
             $this->markTestSkipped("Test file not found: {$filePath}");
         }
-        $options = new StoreBlobOptions(2, '', false);
+        $options = new StoreBlobOrQuiltOptions(2, '', false);
         $storeResponse = $client->storeBlob($filePath, $options, true);
 
         $this->assertTrue($storeResponse->isAlreadyCertified(), 'Expected response to be alreadyCertified.');
@@ -63,7 +63,7 @@ final class WalrusClientE2ETest extends TestCase
     {
         $client = new WalrusClient($this->publisherUrl, $this->aggregatorUrl);
         $data = "Test data with multiple epochs: " . uniqid();
-        $options = new StoreBlobOptions(5, '', false);
+        $options = new StoreBlobOrQuiltOptions(5, '', false);
         $storeResponse = $client->storeBlob($data, $options, false);
 
         $this->assertTrue($storeResponse->isNewlyCreated(), 'Expected response to be newlyCreated.');
@@ -88,7 +88,7 @@ final class WalrusClientE2ETest extends TestCase
         $client = new WalrusClient($this->publisherUrl, $this->aggregatorUrl);
         $data = "Test data with sendObjectTo: " . uniqid();
         $sendObjectTo = "0xed20e3646700113065bb4a9c60565b671a3545800979cc9e82fcf3fabecb6e41";
-        $options = new StoreBlobOptions(2, $sendObjectTo, false);
+        $options = new StoreBlobOrQuiltOptions(2, $sendObjectTo, false);
         $storeResponse = $client->storeBlob($data, $options, false);
 
         $this->assertTrue($storeResponse->isNewlyCreated(), 'Expected response to be newlyCreated.');
@@ -113,7 +113,7 @@ final class WalrusClientE2ETest extends TestCase
             $this->markTestSkipped("Test file not found: {$filePath}");
         }
         $sendObjectTo = "0xed20e3646700113065bb4a9c60565b671a3545800979cc9e82fcf3fabecb6e41";
-        $options = new StoreBlobOptions(10, $sendObjectTo, false);
+        $options = new StoreBlobOrQuiltOptions(10, $sendObjectTo, false);
         $storeResponse = $client->storeBlob($filePath, $options, true);
 
         $this->assertTrue($storeResponse->isAlreadyCertified(), 'Expected response to be alreadyCertified.');
@@ -138,7 +138,7 @@ final class WalrusClientE2ETest extends TestCase
         try {
             $this->assertFileExists($filePath, "Temporary test file was not created.");
 
-            $options = new StoreBlobOptions(2, '', false);
+            $options = new StoreBlobOrQuiltOptions(2, '', false);
             $storeResponse = $client->storeBlob($filePath, $options, true);
 
             $this->assertTrue(

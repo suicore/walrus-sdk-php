@@ -1,6 +1,6 @@
 <?php
 
-namespace Suicore\Walrus\Responses;
+namespace Suicore\Walrus\Types;
 
 class BlobObject
 {
@@ -9,7 +9,7 @@ class BlobObject
     private string $blobId;
     private int $size;
     private string $encodingType;
-    private int $certifiedEpoch;
+    private int | null $certifiedEpoch;
     private Storage $storage;
     private bool $deletable;
 
@@ -19,7 +19,7 @@ class BlobObject
         string $blobId,
         int $size,
         string $encodingType,
-        int $certifiedEpoch,
+        int | null $certifiedEpoch,
         Storage $storage,
         bool $deletable
     ) {
@@ -42,7 +42,6 @@ class BlobObject
                 $data['blobId'],
                 $data['size'],
                 $data['encodingType'],
-                $data['certifiedEpoch'],
                 $data['storage'],
                 $data['deletable']
             )
@@ -57,7 +56,7 @@ class BlobObject
             $data['blobId'],
             (int)$data['size'],
             $data['encodingType'],
-            (int)$data['certifiedEpoch'],
+            isset($data['certifiedEpoch']) ? (int)$data['certifiedEpoch'] : null,
             $storage,
             (bool)$data['deletable']
         );
@@ -83,7 +82,7 @@ class BlobObject
     {
         return $this->encodingType;
     }
-    public function getCertifiedEpoch(): int
+    public function getCertifiedEpoch(): int | null
     {
         return $this->certifiedEpoch;
     }

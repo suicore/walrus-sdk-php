@@ -1,6 +1,6 @@
 <?php
 
-namespace Suicore\Walrus\Responses;
+namespace Suicore\Walrus\Types;
 
 class ResourceOperation
 {
